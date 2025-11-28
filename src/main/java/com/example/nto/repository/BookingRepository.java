@@ -1,8 +1,14 @@
 package com.example.nto.repository;
 
 import com.example.nto.entity.Booking;
+import com.example.nto.entity.Place;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * TODO: ДОРАБОТАТЬ в рамках задания
@@ -12,4 +18,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long>  {
+    @Query("SELECT p FROM Place p LEFT JOIN Booking b ON p.id = b.place.id AND b.date = :date " +
+            "WHERE b.id IS NULL")
+    List<Place> findFreePlacesByDate(@Param("date") LocalDate date);
 }
