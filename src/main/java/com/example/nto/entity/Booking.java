@@ -22,7 +22,7 @@ import java.time.LocalDate;
 @Entity
 public class Booking {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalDate date;
@@ -32,4 +32,10 @@ public class Booking {
 
     @ManyToOne(targetEntity = Employee.class, fetch = FetchType.LAZY)
     private Employee employee;
+
+    public Booking(LocalDate date, Place place, Employee employee) {
+        this.date = date;
+        this.place = place;
+        this.employee = employee;
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * TODO: ДОРАБОТАТЬ в рамках задания
@@ -21,4 +22,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long>  {
     @Query("SELECT p FROM Place p LEFT JOIN Booking b ON p.id = b.place.id AND b.date = :date " +
             "WHERE b.id IS NULL")
     List<Place> findFreePlacesByDate(@Param("date") LocalDate date);
+    Optional<Booking> findByDateAndPlace(LocalDate date, Place place);
 }
