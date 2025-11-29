@@ -1,5 +1,7 @@
 package com.example.nto.service;
 
+import com.example.nto.dto.EmployeeInfoDto;
+import com.example.nto.entity.Employee;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,5 +12,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface EmployeeService {
-    boolean checkAuth(String code);
+    void checkExists(String code);
+    Employee findByCodeOrThrow(String code);
+    EmployeeInfoDto getEmployeeInfoDto(String code);
 }
