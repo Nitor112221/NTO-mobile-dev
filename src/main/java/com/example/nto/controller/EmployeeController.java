@@ -1,7 +1,6 @@
 package com.example.nto.controller;
 
 import com.example.nto.dto.EmployeeInfoDto;
-import com.example.nto.entity.Employee;
 import com.example.nto.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping("/{code}/auth")
-    public ResponseEntity<Employee>  auth(@PathVariable(value = "code") String code) {
+    public ResponseEntity<Void>  auth(@PathVariable(value = "code") String code) {
         employeeService.checkExists(code);
         return ResponseEntity.ok().build();
     }

@@ -61,9 +61,9 @@ public class BookingServiceImpl implements BookingService {
         Place place = placeRepository.findById(request.placeID()).orElseThrow(
                 () -> new PlaceNotFoundException("Place not found")
         );
-        bookingRepository.findByDateAndPlace(date, place).orElseThrow(
-                () -> new PlaceAlreadyBookedException("Place already booked")
-        );
+        bookingRepository.findByDateAndPlace(date, place).ifPresent(booking -> {
+            throw new PlaceAlreadyBookedException("Place already booked");
+        });
 
         Booking booking = new Booking(date, place, employee);
         bookingRepository.save(booking);
