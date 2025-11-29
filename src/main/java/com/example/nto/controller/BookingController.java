@@ -4,7 +4,6 @@ import com.example.nto.dto.BookRequest;
 import com.example.nto.dto.PlaceDto;
 import com.example.nto.service.BookingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +21,7 @@ import java.util.Map;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class BookingController {
-    @Autowired
-    BookingService bookingService;
+    private final BookingService bookingService;
 
     @GetMapping("/{code}/booking")
     public ResponseEntity<Map<LocalDate, List<PlaceDto>>> booking(@PathVariable(value = "code") String code) {
@@ -31,7 +29,7 @@ public class BookingController {
     }
 
     @PostMapping("/{code}/book")
-    public ResponseEntity<Object> book(
+    public ResponseEntity<Void> book(
             @PathVariable(value = "code") String code,
             @RequestBody() BookRequest bookRequest
             ) {

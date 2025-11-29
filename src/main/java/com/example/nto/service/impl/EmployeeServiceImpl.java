@@ -7,10 +7,10 @@ import com.example.nto.entity.Employee;
 import com.example.nto.exception.AuthException;
 import com.example.nto.repository.EmployeeRepository;
 import com.example.nto.service.EmployeeService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -25,21 +25,22 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    @Autowired
-    EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Employee findByCodeOrThrow(String code) {
         return employeeRepository.findByCode(code).orElseThrow(() -> new AuthException("User not found"));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void checkExists(String code) {
         findByCodeOrThrow(code);
     }
 
     @Override
-    @Transactional()
+    @Transactional(readOnly = true)
     public EmployeeInfoDto getEmployeeInfoDto(String code) {
         Employee employee = findByCodeOrThrow(code);
         Map<LocalDate, BookingDto> bookingMap = employee.getBookingList().stream()

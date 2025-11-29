@@ -11,10 +11,10 @@ import com.example.nto.repository.BookingRepository;
 import com.example.nto.repository.PlaceRepository;
 import com.example.nto.service.BookingService;
 import com.example.nto.service.EmployeeService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -31,22 +31,20 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
-    @Autowired
-    BookingRepository bookingRepository;
+    private final BookingRepository bookingRepository;
 
-    @Autowired
-    EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    @Autowired
-    PlaceRepository placeRepository;
+    private final PlaceRepository placeRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Map<LocalDate, List<PlaceDto>> getAvailablePlaces(String code) {
         employeeService.checkExists(code);
 
         Map<LocalDate, List<PlaceDto>> result = new HashMap<>();
         LocalDate date = LocalDate.now();
-        for (int i = 0; i < 4; i++) { // как же мне лень это оптимизировать в 1 SQL запрос XD
+        for (int i = 0; i < 4; i++) {
             result.put(date, bookingRepository.findFreePlacesByDate(date).stream()
                     .map(place -> new PlaceDto(place.getId(), place.getPlace()))
                     .collect(Collectors.toList()));
@@ -56,7 +54,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void bookPlace(String code, BookRequest request) {
         Employee employee = employeeService.findByCodeOrThrow(code);
         LocalDate date = request.date();
