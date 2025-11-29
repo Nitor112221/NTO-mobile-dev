@@ -5,6 +5,8 @@ import com.example.nto.dto.EmployeeInfoDto;
 import com.example.nto.entity.Booking;
 import com.example.nto.entity.Employee;
 import com.example.nto.repository.EmployeeRepository;
+import com.example.nto.service.EmployeeService;
+import com.example.nto.service.impl.EmployeeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +25,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeController {
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
 
     @GetMapping("/{code}/auth")
     public ResponseEntity<Employee>  auth(@PathVariable(value = "code") String code) {
-        if (!employeeRepository.findByCode(code).isPresent()) {
-            return ResponseEntity.status(401).build();
-        }
+        if (!employeeService.checkAuth(code)) { return ResponseEntity.status(401).build(); }
         return ResponseEntity.ok().build();
     }
 

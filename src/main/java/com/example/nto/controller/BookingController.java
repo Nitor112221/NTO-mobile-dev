@@ -69,7 +69,7 @@ public class BookingController {
                 employee -> {
                     Optional<Place> place = placeRepository.findById(bookRequest.placeID());
                     if (place.isEmpty()) {
-                        return ResponseEntity.status(401).build();
+                        return ResponseEntity.status(400).build();
                     }
 
                     Optional<Booking> booking = bookingRepository.findByDateAndPlace(date, place.get());
